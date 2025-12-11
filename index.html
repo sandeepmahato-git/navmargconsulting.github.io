@@ -29,7 +29,8 @@
         
         /* Utility class for routing */
         .page-view {
-            min-height: calc(100vh - 4rem - 5rem); /* viewport height minus header and footer */
+            /* Restores natural scrolling by relying on content height */
+            min-height: auto; 
             padding: 5rem 0;
             display: none; /* Hidden by default, shown by JS */
         }
@@ -58,7 +59,7 @@
                     <button class="nav-btn text-mm-secondary font-medium hover:text-mm-accent transition duration-300" data-page="home">Home</button>
                     <button class="nav-btn text-mm-secondary font-medium hover:text-mm-accent transition duration-300" data-page="about">About Us</button>
                     <button class="nav-btn text-mm-secondary font-medium hover:text-mm-accent transition duration-300" data-page="offerings">Offerings</button>
-                    <button class="nav-btn text-mm-secondary font-medium hover:text-mm-accent transition duration-300" data-page="cases">Case Studies</button>
+                    <!-- Case Studies link removed -->
                     <button class="nav-btn text-mm-secondary font-medium hover:text-mm-accent transition duration-300" data-page="careers">Careers</button>
                     <button onclick="showPage('contact')" class="px-4 py-2 rounded-full bg-mm-accent text-mm-primary font-semibold hover:bg-yellow-600 transition duration-300">Contact</button>
                 </nav>
@@ -75,7 +76,7 @@
                 <button class="mobile-nav-btn block w-full text-left px-3 py-2 rounded-md text-base font-medium text-mm-secondary hover:bg-gray-50" data-page="home">Home</button>
                 <button class="mobile-nav-btn block w-full text-left px-3 py-2 rounded-md text-base font-medium text-mm-secondary hover:bg-gray-50" data-page="about">About Us</button>
                 <button class="mobile-nav-btn block w-full text-left px-3 py-2 rounded-md text-base font-medium text-mm-secondary hover:bg-gray-50" data-page="offerings">Offerings</button>
-                <button class="mobile-nav-btn block w-full text-left px-3 py-2 rounded-md text-base font-medium text-mm-secondary hover:bg-gray-50" data-page="cases">Case Studies</button>
+                <!-- Case Studies link removed -->
                 <button class="mobile-nav-btn block w-full text-left px-3 py-2 rounded-md text-base font-medium text-mm-secondary hover:bg-gray-50" data-page="careers">Careers</button>
                 <button class="mobile-nav-btn block w-full text-center px-3 py-2 rounded-md text-base font-medium bg-mm-accent text-mm-primary" data-page="contact">Contact Us</button>
             </div>
@@ -140,14 +141,20 @@
                 </div>
             </div>
 
-            <!-- Founders Section (Modified Content based on Bounding Box selection, if necessary, but preserving original structure if content was just placeholder text) -->
+            <!-- Founders Section -->
             <div class="border-t pt-10">
                 <h3 class="text-3xl font-bold text-mm-primary mb-8 text-center">Meet the Founders</h3>
                 <div class="grid md:grid-cols-2 gap-10">
                     
                     <!-- Sandeep Kumar Mahato -->
                     <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-mm-primary text-center">
-                        <img src="https://placehold.co/100x100/1E3A8A/FFFFFF?text=SKM" alt="Sandeep Kumar Mahato" class="w-24 h-24 rounded-full mx-auto mb-4 object-cover border-4 border-mm-accent">
+                        <!-- Updated source path and added onerror for resilience -->
+                        <img 
+                            src="sandeep.jpg" 
+                            alt="Sandeep Kumar Mahato" 
+                            class="w-24 h-24 rounded-full mx-auto mb-4 object-cover border-4 border-mm-accent"
+                            onerror="this.onerror=null; this.src='https://placehold.co/96x96/1E3A8A/F59E0B?text=SKM';"
+                        >
                         <h4 class="text-xl font-bold text-mm-primary">Sandeep Kumar Mahato</h4>
                         <p class="text-mm-accent font-semibold mb-3">Co-Founder & CEO </p>
                         <p class="text-sm text-mm-secondary leading-relaxed">
@@ -157,7 +164,13 @@
 
                     <!-- Biswamohan Mohapatra -->
                     <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-mm-primary text-center">
-                        <img src="https://placehold.co/100x100/1E3A8A/FFFFFF?text=BMM" alt="Biswamohan Mohapatra" class="w-24 h-24 rounded-full mx-auto mb-4 object-cover border-4 border-mm-accent">
+                        <!-- Updated source path and added onerror for resilience -->
+                        <img 
+                            src="biswamohan.jpg" 
+                            alt="Biswamohan Mohapatra" 
+                            class="w-24 h-24 rounded-full mx-auto mb-4 object-cover border-4 border-mm-accent"
+                            onerror="this.onerror=null; this.src='https://placehold.co/96x96/1E3A8A/F59E0B?text=BMM';"
+                        >
                         <h4 class="text-xl font-bold text-mm-primary">Biswamohan Mohapatra</h4>
                         <p class="text-mm-accent font-semibold mb-3">Co-Founder & COO</p>
                         <p class="text-sm text-mm-secondary leading-relaxed">
@@ -168,7 +181,7 @@
             </div>
         </section>
 
-        <!-- OFFERINGS PAGE (View 3) - UPDATED CONTENT -->
+        <!-- OFFERINGS PAGE (View 3) -->
         <section id="offerings-page" class="page-view bg-mm-bg">
             <h2 class="text-4xl font-extrabold text-mm-primary mb-4 text-center">AI-Enabled Project Management</h2>
             <p class="text-xl text-mm-secondary mb-12 text-center max-w-3xl mx-auto">
@@ -225,86 +238,14 @@
                         <li>Project rescue, delivery improvement & PMO optimisation</li>
                         <li>Outcome-based contracting for high-risk transformations</li>
                     </ul>
-                    <button onclick="showPage('cases')" class="mt-6 text-sm text-mm-accent font-semibold underline hover:text-mm-primary transition">View Success Stories &rarr;</button>
+                    <!-- Link changed from 'cases' to 'contact' -->
+                    <button onclick="showPage('contact')" class="mt-6 text-sm text-mm-accent font-semibold underline hover:text-mm-primary transition">Get Case Details &rarr;</button>
                 </div>
 
             </div>
         </section>
 
-        <!-- CASE STUDIES PAGE (View 4) -->
-        <section id="cases-page" class="page-view bg-mm-bg">
-            <h2 class="text-4xl font-extrabold text-mm-primary mb-4 text-center">Our Impact: Case Studies</h2>
-            <p class="text-xl text-mm-secondary mb-12 text-center max-w-3xl mx-auto">
-                Real results. Measured value. See how we've helped our clients achieve their toughest goals.
-            </p>
-
-            <div class="space-y-12">
-                <!-- Case Study 1: AI-Augmented Delivery -->
-                <div class="bg-white rounded-xl shadow-xl overflow-hidden md:flex transition duration-300 hover:shadow-2xl hover:scale-[1.01]">
-                    <div class="md:w-1/3 bg-mm-accent/10 p-8 flex flex-col justify-center text-center">
-                        <h3 class="text-3xl font-extrabold text-mm-primary">High-Velocity Tech Delivery</h3>
-                        <p class="text-base text-mm-secondary mt-1">AI Integration & Process Optimization</p>
-                        <span class="text-6xl mt-4">🚀</span>
-                    </div>
-                    <div class="md:w-2/3 p-8">
-                        <h4 class="text-2xl font-bold text-mm-primary mb-4">Challenge: Accelerating Delivery and Enhancing Product Quality with AI</h4>
-                        <p class="text-mm-secondary leading-relaxed mb-4 text-base">
-                            Navmarg Consulting enabled a rapidly scaling technology organization to accelerate delivery and enhance product quality through a strategic blend of AI integration and process optimization. We deployed AI-powered automation across management workflows—including meeting intelligence, automated reporting, and documentation generation—to free mid-level leaders for strategic decision-making. Simultaneously, AI-assisted engineering capabilities, such as intelligent code generation, automated testing, and predictive DevOps insights, significantly reduced development cycle time and improved release reliability. Optimized Agile processes further ensured a high-performance, innovation-centric, AI-augmented delivery ecosystem.
-                        </p>
-                        <div class="grid grid-cols-3 gap-4 border-t pt-4">
-                            <div>
-                                <p class="text-4xl font-extrabold text-mm-accent">-30%</p>
-                                <p class="text-xs text-gray-500">Reduction in Development Cycle Time</p>
-                            </div>
-                            <div>
-                                <p class="text-4xl font-extrabold text-mm-accent">+45%</p>
-                                <p class="text-xs text-gray-500">Increase in Automated Test Coverage</p>
-                            </div>
-                             <div>
-                                <p class="text-4xl font-extrabold text-mm-accent">-25%</p>
-                                <p class="text-xs text-gray-500">Reduction in Managerial Overhead Time</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Case Study 2: Global Healthcare Efficiency -->
-                <div class="bg-white rounded-xl shadow-xl overflow-hidden md:flex transition duration-300 hover:shadow-2xl hover:scale-[1.01]">
-                    <div class="md:w-1/3 bg-mm-primary/10 p-8 flex flex-col justify-center text-center order-2">
-                         <h3 class="text-3xl font-extrabold text-mm-primary">Global Healthcare Efficiency</h3>
-                        <p class="text-base text-mm-secondary mt-1">Operational Excellence & Lean</p>
-                        <span class="text-6xl mt-4">🩺</span>
-                    </div>
-                    <div class="md:w-2/3 p-8 order-1">
-                        <h4 class="text-2xl font-bold text-mm-primary mb-4">Challenge: Reducing Time-to-Market for Medical Devices</h4>
-                        <p class="text-mm-secondary leading-relaxed mb-4 text-base">
-                            A major medical device manufacturer suffered from excessively long regulatory approval and production cycles. Biswamohan Mohapatra's team applied Lean Six Sigma principles to map the end-to-end value stream, eliminating non-value-add steps, integrating automated quality checks, and establishing a new center of excellence for continuous improvement.
-                        </p>
-                        <div class="grid grid-cols-3 gap-4 border-t pt-4">
-                            <div>
-                                <p class="text-4xl font-extrabold text-mm-accent">-20%</p>
-                                <p class="text-xs text-gray-500">Reduction in Regulatory Cycle Time</p>
-                            </div>
-                            <div>
-                                <p class="text-4xl font-extrabold text-mm-accent">$4.5M</p>
-                                <p class="text-xs text-gray-500">Annualized Cost Savings</p>
-                            </div>
-                            <div>
-                                <p class="text-4xl font-extrabold text-mm-accent">98%</p>
-                                <p class="text-xs text-gray-500">First-Pass Yield Improvement</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="text-center pt-8">
-                     <button onclick="showPage('contact')" class="px-8 py-3 text-lg font-bold rounded-full bg-mm-primary text-white shadow-md hover:bg-blue-800 transition duration-300">
-                        Discuss Your Transformation
-                    </button>
-                </div>
-            </div>
-        </section>
-
-        <!-- CAREERS PAGE (View 5) -->
+        <!-- CAREERS PAGE (View 4 - now View 4, previously 5) -->
         <section id="careers-page" class="page-view bg-mm-bg">
             <h2 class="text-4xl font-extrabold text-mm-primary mb-4 text-center">Join Navmarg Consulting</h2>
             <p class="text-xl text-mm-secondary mb-12 text-center max-w-3xl mx-auto">
@@ -317,7 +258,7 @@
                     At Navmarg, you'll be empowered to solve high-stakes problems for influential organizations from day one. We offer competitive compensation, a commitment to continuous learning (including certifications in AI, Lean, and Cloud), and a balanced, collaborative work environment that respects your expertise and work-life balance. We believe that the best work is done when consultants are supported, not burned out.
                 </p>
 
-                <!-- NEW: Why Join Navmarg Section (3 key value propositions) -->
+                <!-- Why Join Navmarg Section (3 key value propositions) -->
                 <h3 class="text-2xl font-bold text-mm-primary mb-6 mt-10 border-t pt-6">Why Join Navmarg?</h3>
                 <div class="grid md:grid-cols-3 gap-8 mb-12">
                     
@@ -365,7 +306,7 @@
             </div>
         </section>
 
-        <!-- CONTACT PAGE (View 6) -->
+        <!-- CONTACT PAGE (View 5 - now View 5, previously 6) -->
         <section id="contact-page" class="page-view bg-mm-bg">
             <h2 class="text-4xl font-extrabold text-mm-primary mb-4 text-center">Let's Connect</h2>
             <p class="text-xl text-mm-secondary mb-12 text-center max-w-3xl mx-auto">
@@ -435,7 +376,8 @@
 
     <!-- Simple Client-Side Router Script -->
     <script>
-        const pages = ['home', 'about', 'offerings', 'cases', 'careers', 'contact'];
+        // Updated pages array, 'cases' is removed
+        const pages = ['home', 'about', 'offerings', 'careers', 'contact'];
         
         // Modal Functions
         function showModal(title, message) {
@@ -530,9 +472,6 @@ Sent via Navmarg Consulting website inquiry form.
         // Initial load: show the home page
         window.onload = () => {
             showPage('home');
-            
-            // Switch directly to the Careers page to show the update immediately
-            showPage('careers'); 
         };
     </script>
 
