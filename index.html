@@ -1,460 +1,406 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Navmarg Consulting - Strategy. Excellence. Transformation.</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        // Tailwind Configuration - Keeping the professional palette
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'mm-primary': '#1E3A8A', // Deep Blue
-                        'mm-accent': '#F59E0B',  // Muted Amber/Gold
-                        'mm-bg': '#F9FAFB',      // Light Off-White
-                        'mm-secondary': '#4B5563', // Slate Gray
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap');
-        body { font-family: 'Inter', sans-serif; }
-        
-        /* Utility class for routing */
-        .page-view {
-            /* Restores natural scrolling by relying on content height */
-            min-height: auto; 
-            padding: 5rem 0;
-            display: none; /* Hidden by default, shown by JS */
-        }
-        
-        .active-link {
-            border-bottom: 3px solid #F59E0B; /* mm-accent */
-            color: #1E3A8A; /* mm-primary */
-            padding-bottom: 0.5rem;
-            font-weight: 600;
-        }
-    </style>
-</head>
-<body class="bg-mm-bg font-sans antialiased">
+import React, { useState, useEffect } from 'react';
+import { 
+  ChevronRight, 
+  ChevronLeft, 
+  Target, 
+  Settings, 
+  Users, 
+  ArrowRight, 
+  Menu, 
+  X,
+  CheckCircle2,
+  Globe,
+  BarChart3,
+  Cpu,
+  Mail,
+  Linkedin,
+  Send
+} from 'lucide-react';
 
-    <!-- Sticky Navigation Bar -->
-    <header class="sticky top-0 z-50 bg-white shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between items-center h-16">
-                <!-- Logo/Company Name -->
-                <button onclick="showPage('home')" class="text-2xl font-extrabold tracking-wider text-mm-primary flex items-center focus:outline-none">
-                    Navmarg <span class="text-mm-accent text-3xl ml-1">C</span>onsulting
-                </button>
+const App = () => {
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [currentPage, setCurrentPage] = useState('home'); 
+  const [formSubmitted, setFormSubmitted] = useState(false);
 
-                <!-- Desktop Navigation -->
-                <nav class="hidden md:flex space-x-8" id="desktop-nav">
-                    <button class="nav-btn text-mm-secondary font-medium hover:text-mm-accent transition duration-300" data-page="home">Home</button>
-                    <button class="nav-btn text-mm-secondary font-medium hover:text-mm-accent transition duration-300" data-page="about">About Us</button>
-                    <button class="nav-btn text-mm-secondary font-medium hover:text-mm-accent transition duration-300" data-page="offerings">Offerings</button>
-                    <!-- Case Studies link removed -->
-                    <button class="nav-btn text-mm-secondary font-medium hover:text-mm-accent transition duration-300" data-page="careers">Careers</button>
-                    <button onclick="showPage('contact')" class="px-4 py-2 rounded-full bg-mm-accent text-mm-primary font-semibold hover:bg-yellow-600 transition duration-300">Contact</button>
-                </nav>
-                
-                <!-- Mobile Menu Button -->
-                <button id="mobile-menu-button" class="md:hidden p-2 rounded-md text-mm-secondary focus:outline-none">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="https://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-                </button>
-            </div>
+  const companyEmail = "info@navmargconsulting.com";
+
+  // Navigation Links
+  const navLinks = [
+    { name: 'Home', action: () => { setCurrentPage('home'); window.scrollTo(0,0); } },
+    { name: 'Services', action: () => { setCurrentPage('home'); setTimeout(() => document.getElementById('services')?.scrollIntoView({behavior: 'smooth'}), 100); } },
+    { name: 'About Us', action: () => { setCurrentPage('about'); window.scrollTo(0,0); } },
+    { name: 'Contact', action: () => { setCurrentPage('home'); setTimeout(() => document.getElementById('contact')?.scrollIntoView({behavior: 'smooth'}), 100); } },
+  ];
+
+  // Carousel Data
+  const slides = [
+    {
+      title: "Strategic Innovation for a Digital Era",
+      subtitle: "Navigating complexity with proven methodologies and deep industry expertise.",
+      cta: "Explore Strategy",
+      image: "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&q=80&w=2000"
+    },
+    {
+      title: "Operational Excellence & AI Automation",
+      subtitle: "Optimizing efficiency and performance through data-driven insights.",
+      cta: "See Operations",
+      image: "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=2000"
+    },
+    {
+      title: "Building High-Performing AI Teams",
+      subtitle: "Empowering your organization with talent and cutting-edge AI enablement.",
+      cta: "Meet Talent",
+      image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=2000"
+    }
+  ];
+
+  // Services Data
+  const services = [
+    {
+      title: "Strategy & Transformation",
+      icon: <Target className="w-8 h-8 text-blue-600" />,
+      description: "Develop comprehensive business strategies and manage enterprise transformations with proven methodologies and deep industry expertise.",
+      items: ["AI Roadmap & strategies", "Digital transformation", "Agile & Product Transformation", "Business Model Innovation"],
+      color: "bg-blue-50"
+    },
+    {
+      title: "Operations Excellence",
+      icon: <Settings className="w-8 h-8 text-emerald-600" />,
+      description: "Optimize operational efficiency, streamline processes, and enhance organizational performance through data-driven insights.",
+      items: ["Operational efficiency improvement", "Operational reporting Automation", "AI enabled process Automation", "Service Delivery excellence"],
+      color: "bg-emerald-50"
+    },
+    {
+      title: "Talent & Staff Augmentation",
+      icon: <Users className="w-8 h-8 text-purple-600" />,
+      description: "Build high-performing teams and organizational capabilities that drive sustainable business success.",
+      items: ["AI enablement Program", "Agentic AI development Programs", "Contract staffing", "Corporate Trainings"],
+      color: "bg-purple-50"
+    }
+  ];
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 50);
+    window.addEventListener('scroll', handleScroll);
+    const interval = setInterval(() => {
+      setActiveSlide((prev) => (prev + 1) % slides.length);
+    }, 6000);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      clearInterval(interval);
+    };
+  }, []);
+
+  const handleContactSubmit = (e) => {
+    e.preventDefault();
+    // Simulate successful submission logic by updating local state
+    // We remove the window.location.href redirect to prevent page jumping or external apps opening
+    setFormSubmitted(true);
+  };
+
+  // Shared Components
+  const Logo = ({ light }) => (
+    <div className="flex items-center space-x-3 cursor-pointer group" onClick={() => setCurrentPage('home')}>
+      <div className="relative flex items-center justify-center w-12 h-12">
+        <div className="absolute inset-0 bg-blue-600 rounded-xl rotate-6 group-hover:rotate-12 transition-transform"></div>
+        <div className="absolute inset-0 bg-slate-900 rounded-xl -rotate-3 group-hover:rotate-0 transition-transform flex items-center justify-center border border-white/20">
+          <span className="text-white font-black text-xl tracking-tighter">NC</span>
         </div>
-        <!-- Mobile Menu -->
-        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-gray-100">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <button class="mobile-nav-btn block w-full text-left px-3 py-2 rounded-md text-base font-medium text-mm-secondary hover:bg-gray-50" data-page="home">Home</button>
-                <button class="mobile-nav-btn block w-full text-left px-3 py-2 rounded-md text-base font-medium text-mm-secondary hover:bg-gray-50" data-page="about">About Us</button>
-                <button class="mobile-nav-btn block w-full text-left px-3 py-2 rounded-md text-base font-medium text-mm-secondary hover:bg-gray-50" data-page="offerings">Offerings</button>
-                <!-- Case Studies link removed -->
-                <button class="mobile-nav-btn block w-full text-left px-3 py-2 rounded-md text-base font-medium text-mm-secondary hover:bg-gray-50" data-page="careers">Careers</button>
-                <button class="mobile-nav-btn block w-full text-center px-3 py-2 rounded-md text-base font-medium bg-mm-accent text-mm-primary" data-page="contact">Contact Us</button>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Content Wrapper for all "Pages" -->
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-
-        <!-- HOME PAGE (View 1) -->
-        <section id="home-page" class="page-view relative flex items-center justify-center bg-mm-bg -mx-4 sm:-mx-6 lg:-mx-8">
-            <div class="w-full bg-mm-primary text-white py-24 md:py-40 relative overflow-hidden shadow-2xl">
-                <div class="absolute inset-0 opacity-10 bg-cover" style="background-image: url('https://placehold.co/1920x1080/FFFFFF/1E3A8A?text=STRATEGIC+GROWTH');"></div>
-                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-                    <div class="lg:w-3/4">
-                        <p class="text-lg font-light text-mm-accent mb-3 uppercase tracking-widest">Navmarg Consulting</p>
-                        <h1 class="text-5xl md:text-6xl font-extrabold leading-tight mb-6">
-                            Strategy. <span class="text-mm-accent">Excellence.</span> Transformation.
-                        </h1>
-                        <p class="text-xl md:text-2xl font-light mb-10 opacity-90">
-                            We empower global leaders to rise above complexity and unlock measurable efficiency—delivering pragmatic, data-driven consulting that accelerates AI transformation and drives real, sustained impact.
-                        </p>
-                        <button onclick="showPage('offerings')" class="inline-block px-10 py-4 text-lg font-bold rounded-full bg-mm-accent text-mm-primary shadow-2xl hover:bg-yellow-600 transition duration-300 transform hover:scale-105">
-                            Explore Our Services
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- ABOUT US PAGE (View 2) -->
-       <section id="about-page" class="page-view bg-mm-bg">
-            <h2 class="text-4xl font-extrabold text-mm-primary mb-12 text-center">Our Firm & Leadership</h2>
-            
-            <div class="grid md:grid-cols-2 gap-12 items-center mb-16">
-                <div>
-                    <h3 class="text-3xl font-bold text-mm-primary mb-4">The Navmarg Difference</h3>
-                    <p class="text-lg text-mm-secondary leading-relaxed mb-6">
-                        Navmarg Consulting was founded on the principle that true value lies at the intersection of rigorous operational strategy and human-centric digital change. We specialize in taking complex, legacy processes and re-engineering them for the modern, AI-enabled enterprise.
-                    </p>
-                    <p class="text-base text-gray-500 italic">
-                        "We build the bridge between visionary strategy and flawless execution."
-                    </p>
-                </div>
-                <div class="bg-white p-8 rounded-xl shadow-inner border border-gray-100">
-                     <div class="space-y-4">
-                        <div class="flex items-center">
-                            <span class="text-mm-accent text-2xl mr-3">💡</span>
-                            <p class="font-semibold text-mm-primary">Strategy: Future-Proofing your business model.</p>
-                        </div>
-                         <div class="flex items-center">
-                            <span class="text-mm-accent text-2xl mr-3">⚙️</span>
-                            <p class="font-semibold text-mm-primary">Operations: Maximizing efficiency and cost savings.</p>
-                        </div>
-                         <div class="flex items-center">
-                            <span class="text-mm-accent text-2xl mr-3">🤝</span>
-                            <p class="font-semibold text-mm-primary">Talent: Empowering your workforce for change.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="border-t pt-10">
-                <h3 class="text-3xl font-bold text-mm-primary mb-8 text-center">Meet the Founders</h3>
-                <div class="grid md:grid-cols-2 gap-10">
-                    <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-mm-primary text-center">
-                        <img src="madhuri.jpg" alt="Madhuri M" class="w-24 h-24 rounded-full mx-auto mb-4 object-cover border-4 border-mm-accent" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Madhuri+M&background=1E3A8A&color=F59E0B';">
-                        <h4 class="text-xl font-bold text-mm-primary">Madhuri M</h4>
-                        <p class="text-mm-accent font-semibold mb-3">Founder & CEO</p>
-                        <p class="text-sm text-mm-secondary leading-relaxed">
-                            Madhuri provides the foundational vision for Navmarg Consulting. With extensive experience in executive leadership and organizational transformation, she guides the firm’s mission to deliver high-impact strategic solutions and foster a culture of excellence and innovation.
-                        </p>
-                    </div>
-                    <div class="bg-white p-8 rounded-xl shadow-lg border-t-4 border-mm-primary text-center">
-                        <img src="sandeep.jpg" alt="Sandeep Kumar Mahato" class="w-24 h-24 rounded-full mx-auto mb-4 object-cover border-4 border-mm-accent" onerror="this.onerror=null; this.src='https://ui-avatars.com/api/?name=Sandeep+Mahato&background=1E3A8A&color=F59E0B';">
-                        <h4 class="text-xl font-bold text-mm-primary">Sandeep Kumar Mahato</h4>
-                        <p class="text-mm-accent font-semibold mb-3">Managing Director & CTO</p>
-                        <p class="text-sm text-mm-secondary leading-relaxed">
-                            Sandeep spearheads the firm's technological roadmap and delivery excellence. With over 15 years in global technology consulting, he specializes in architecting AI transformations and ensuring that cutting-edge technology translates into tangible business value.
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </section>
-        
-        <!-- OFFERINGS PAGE (View 3) -->
-        <section id="offerings-page" class="page-view bg-mm-bg">
-            <h2 class="text-4xl font-extrabold text-mm-primary mb-4 text-center">AI-Enabled Project Management</h2>
-            <p class="text-xl text-mm-secondary mb-12 text-center max-w-3xl mx-auto">
-                End-to-end consulting, training and talent services focused on AI-enabled Project Management for Healthcare & Finance IT teams.
-            </p>
-
-            <div class="grid md:grid-cols-3 gap-8">
-                
-                <!-- Offering 1: AI-enabled PM Training -->
-                <div class="bg-white text-mm-secondary p-8 rounded-xl shadow-2xl transition duration-300 hover:shadow-mm-accent/50 hover:scale-[1.02] border-t-4 border-mm-accent">
-                    <div class="text-4xl text-mm-accent mb-4">
-                        <span role="img" aria-label="Training Icon">🎓</span>
-                    </div>
-                    <h3 class="text-2xl font-bold text-mm-primary mb-3">AI-enabled PM Training</h3>
-                    <p class="mb-4 text-base">
-                        Practical cohort programs and corporate workshops that teach project managers how to apply AI for forecasting, risk detection, scheduling optimisation and decision support. Hands-on labs + real data playbooks.
-                    </p>
-                    <ul class="text-sm space-y-2 text-gray-600 list-disc list-inside">
-                        <li>Bootcamps, corporate trainings, certification paths</li>
-                        <li>Agentic AI and AI integrations with traditional tools</li>
-                        <li>AI tools for PMs, QA and Business Analysts</li>
-                    </ul>
-                    <button onclick="showPage('contact')" class="mt-6 text-sm text-mm-accent font-semibold underline hover:text-mm-primary transition">Enroll Your Team &rarr;</button>
-                </div>
-
-                <!-- Offering 2: Talent Supply & Staff Augmentation -->
-                <div class="bg-white text-mm-secondary p-8 rounded-xl shadow-2xl transition duration-300 hover:shadow-mm-accent/50 hover:scale-[1.02] border-t-4 border-mm-accent">
-                    <div class="text-4xl text-mm-accent mb-4">
-                        <span role="img" aria-label="Staffing Icon">💼</span>
-                    </div>
-                    <h3 class="text-2xl font-bold text-mm-primary mb-3">Talent Supply & Staff Augmentation</h3>
-                    <p class="mb-4 text-base">
-                        Vetted, experienced AI-enabled Project Managers, PMO specialists, data engineers and compliance leads available as contract or permanent hires. Rapid bench-to-project placement with role-based assessments.
-                    </p>
-                    <ul class="text-sm space-y-2 text-gray-600 list-disc list-inside">
-                        <li>Screened candidates with domain experience (Healthcare / Finance)</li>
-                        <li>Placement fees, contract staffing, managed teams</li>
-                        <li>Skills verification & certification</li>
-                    </ul>
-                    <button onclick="showPage('careers')" class="mt-6 text-sm text-mm-accent font-semibold underline hover:text-mm-primary transition">Request Talent &rarr;</button>
-                </div>
-
-                <!-- Offering 3: Advisory & Managed Services -->
-                <div class="bg-white text-mm-secondary p-8 rounded-xl shadow-2xl transition duration-300 hover:shadow-mm-accent/50 hover:scale-[1.02] border-t-4 border-mm-accent">
-                    <div class="text-4xl text-mm-accent mb-4">
-                        <span role="img" aria-label="Advisory Icon">🛠️</span>
-                    </div>
-                    <h3 class="text-2xl font-bold text-mm-primary mb-3">Advisory & Managed Services</h3>
-                    <p class="mb-4 text-base">
-                        From fast-start AI-PM pilots to long-term managed delivery, we combine advisory, governance and delivery to reduce risk and accelerate outcomes – especially where compliance matters.
-                    </p>
-                    <ul class="text-sm space-y-2 text-gray-600 list-disc list-inside">
-                        <li>AI governance, model risk assessments, data privacy & compliance</li>
-                        <li>Project rescue, delivery improvement & PMO optimisation</li>
-                        <li>Outcome-based contracting for high-risk transformations</li>
-                    </ul>
-                    <!-- Link changed from 'cases' to 'contact' -->
-                    <button onclick="showPage('contact')" class="mt-6 text-sm text-mm-accent font-semibold underline hover:text-mm-primary transition">Get Case Details &rarr;</button>
-                </div>
-
-            </div>
-        </section>
-
-        <!-- CAREERS PAGE (View 4 - now View 4, previously 5) -->
-        <section id="careers-page" class="page-view bg-mm-bg">
-            <h2 class="text-4xl font-extrabold text-mm-primary mb-4 text-center">Join Navmarg Consulting</h2>
-            <p class="text-xl text-mm-secondary mb-12 text-center max-w-3xl mx-auto">
-                We're looking for analytical thinkers, strategic leaders, and passionate innovators who are ready to make a measurable difference.
-            </p>
-
-            <div class="bg-white p-10 rounded-xl shadow-2xl border-t-4 border-mm-accent">
-                <h3 class="text-3xl font-bold text-mm-primary mb-6">Our Culture: Impact First</h3>
-                <p class="text-base leading-relaxed mb-8 text-mm-secondary">
-                    At Navmarg, you'll be empowered to solve high-stakes problems for influential organizations from day one. We offer competitive compensation, a commitment to continuous learning (including certifications in AI, Lean, and Cloud), and a balanced, collaborative work environment that respects your expertise and work-life balance. We believe that the best work is done when consultants are supported, not burned out.
-                </p>
-
-                <!-- Why Join Navmarg Section (3 key value propositions) -->
-                <h3 class="text-2xl font-bold text-mm-primary mb-6 mt-10 border-t pt-6">Why Join Navmarg?</h3>
-                <div class="grid md:grid-cols-3 gap-8 mb-12">
-                    
-                    <!-- VP 1: Industry Expertise / Impact -->
-                    <div class="p-5 bg-mm-bg rounded-lg shadow border-l-4 border-mm-primary">
-                        <p class="font-extrabold text-mm-accent text-xl mb-1">Unparalleled Impact</p>
-                        <p class="text-sm text-gray-600">Work alongside industry pioneers, tackling the most complex challenges in AI-powered solutions and process transformation.</p>
-                    </div>
-
-                    <!-- VP 2: Learning Culture -->
-                    <div class="p-5 bg-mm-bg rounded-lg shadow border-l-4 border-mm-primary">
-                        <p class="font-extrabold text-mm-accent text-xl mb-1">Continuous Mastery</p>
-                        <p class="text-sm text-gray-600">Benefit from a dedicated learning culture, providing continuous training and hands-on access to the latest frontier technologies.</p>
-                    </div>
-
-                    <!-- VP 3: Career Growth -->
-                    <div class="p-5 bg-mm-bg rounded-lg shadow border-l-4 border-mm-primary">
-                        <p class="font-extrabold text-mm-accent text-xl mb-1">Accelerated Growth</p>
-                        <p class="text-sm text-gray-600">Build deep expertise and advance rapidly through diverse, high-impact engagements and a clear promotion track.</p>
-                    </div>
-                </div>
-                
-                <!-- Existing content - Adjusted to 2 columns for layout -->
-                <div class="grid md:grid-cols-2 gap-8">
-                    <!-- Current Open Roles (Occupies one column) -->
-                    <div class="p-6 bg-mm-bg rounded-lg shadow border-l-4 border-mm-primary">
-                        <p class="font-bold text-mm-accent text-lg mb-2">Current Open Roles</p>
-                        <ul class="text-sm space-y-1 text-gray-600 list-disc list-inside">
-                            <!-- Open Roles List: This was previously updated and remains correct. -->
-                            <li>AI Product Manager</li>
-                            <li>AI Transformation Consultant</li>
-                            <li>AI Design Consultant</li>
-                            <li>Domain Consultants (Healthcare and Insurance)</li>
-                        </ul>
-                    </div>
-                    <!-- Ready to Apply (Occupies one column) -->
-                    <div class="p-6 bg-mm-bg rounded-lg shadow border-l-4 border-mm-primary flex flex-col justify-center items-center">
-                        <p class="text-xl font-bold text-mm-primary mb-4">Ready to Apply?</p>
-                        <!-- CV Submission already updated to info@navmargconsulting.com -->
-                        <button onclick="window.location.href='mailto:info@navmargconsulting.com.com'" class="w-full py-3 bg-mm-accent text-mm-primary font-bold rounded-lg shadow-md hover:bg-yellow-600 transition">
-                            Submit Your CV
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- CONTACT PAGE (View 5 - now View 5, previously 6) -->
-        <section id="contact-page" class="page-view bg-mm-bg">
-            <h2 class="text-4xl font-extrabold text-mm-primary mb-4 text-center">Let's Connect</h2>
-            <p class="text-xl text-mm-secondary mb-12 text-center max-w-3xl mx-auto">
-                Start a conversation about your most pressing business challenges today.
-            </p>
-
-            <div class="grid md:grid-cols-3 gap-8 text-center max-w-5xl mx-auto">
-                <div class="p-8 bg-white rounded-xl shadow-lg border-t-4 border-mm-accent hover:shadow-xl transition duration-300">
-                    <p class="text-3xl mb-3">📧</p>
-                    <p class="font-semibold text-mm-primary text-xl">Email Us</p>
-                    <p class="text-base text-mm-secondary mt-2">info@navmargconsulting.com</p>
-                    <p class="text-xs text-gray-400">Response within 24 hours</p>
-                </div>
-                 <div class="p-8 bg-white rounded-xl shadow-lg border-t-4 border-mm-accent hover:shadow-xl transition duration-300">
-                    <p class="text-3xl mb-3">📞</p>
-                    <p class="font-semibold text-mm-primary text-xl">Call Us</p>
-                    <!-- UPDATED PHONE NUMBER for both link and display -->
-                    <a href="tel:+919972825008" class="text-base text-mm-secondary mt-2 inline-block hover:text-mm-primary transition duration-200">+91 99728 25008</a>
-                    <p class="text-xs text-gray-400">Mon - Fri, 9am - 5pm IST</p>
-                </div>
-                 <div class="p-8 bg-white rounded-xl shadow-lg border-t-4 border-mm-accent hover:shadow-xl transition duration-300">
-                    <p class="text-3xl mb-3">📍</p>
-                    <p class="font-semibold text-mm-primary text-xl">Office Location</p>
-                    <p class="text-base text-mm-secondary mt-2">Bagmane world Techno Park, Bangalore, India</p>
-                    <p class="text-xs text-gray-400">By appointment only</p>
-                </div>
-            </div>
-            
-            <div class="mt-12 p-8 bg-white rounded-xl shadow-lg max-w-3xl mx-auto border border-gray-100">
-                <h3 class="text-2xl font-bold text-mm-primary mb-4 text-center">Send Us a Quick Message</h3>
-                <!-- Form submission updated to use handleContactSubmit function -->
-                <form onsubmit="event.preventDefault(); handleContactSubmit(this);">
-                    <input type="text" id="contactName" placeholder="Your Name" required class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-mm-accent focus:border-mm-accent">
-                    <input type="email" id="contactEmail" placeholder="Your Business Email" required class="w-full p-3 mb-4 border border-gray-300 rounded-lg focus:ring-mm-accent focus:border-mm-accent">
-                    <textarea id="contactMessage" placeholder="Tell us about your project..." rows="4" required class="w-full p-3 mb-6 border border-gray-300 rounded-lg focus:ring-mm-accent focus:border-mm-accent"></textarea>
-                    <button type="submit" class="w-full py-3 bg-mm-primary text-white font-bold rounded-lg shadow-md hover:bg-blue-800 transition">
-                        Submit Inquiry
-                    </button>
-                </form>
-            </div>
-        </section>
-
-    </main>
-
-    <!-- Footer -->
-    <footer class="bg-gray-800 text-white py-6 mt-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-center text-sm">
-            <p>&copy; 2025 Navmarg Consulting. All Rights Reserved.</p>
-            <div class="space-x-4 mt-2 md:mt-0">
-                <a href="javascript:void(0)" onclick="showModal('Privacy Policy', 'This is a placeholder for the Privacy Policy content.')" class="hover:text-mm-accent transition">Privacy Policy</a>
-                <a href="javascript:void(0)" onclick="showModal('Terms of Service', 'This is a placeholder for the Terms of Service content.')" class="hover:text-mm-accent transition">Terms of Service</a>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Custom Message Box Modal Structure (Replaces alerts) -->
-    <div id="custom-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 z-[9999] flex items-center justify-center p-4 transition-opacity duration-300">
-        <div class="bg-white rounded-xl p-8 max-w-sm w-full shadow-2xl transform scale-100 transition-transform duration-300">
-            <h3 id="modal-title" class="text-xl font-bold text-mm-primary mb-4">Notification</h3>
-            <p id="modal-message" class="text-mm-secondary mb-6"></p>
-            <button onclick="hideModal()" class="w-full py-3 bg-mm-accent text-mm-primary font-bold rounded-lg hover:bg-yellow-600 transition">
-                Close
-            </button>
-        </div>
+      </div>
+      <span className={`text-xl font-bold tracking-tight ${light ? 'text-white' : scrolled || currentPage !== 'home' ? 'text-slate-900' : 'text-white'}`}>
+        NAVMARG <span className="font-light opacity-80">CONSULTING</span>
+      </span>
     </div>
+  );
 
+  return (
+    <div className="min-h-screen bg-slate-50 font-sans text-slate-900 selection:bg-blue-100 selection:text-blue-900">
+      
+      {/* Navigation */}
+      <nav className={`fixed w-full z-50 transition-all duration-300 ${scrolled || currentPage !== 'home' ? 'bg-white shadow-md py-3' : 'bg-transparent py-5'}`}>
+        <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+          <Logo light={!scrolled && currentPage === 'home'} />
 
-    <!-- Simple Client-Side Router Script -->
-    <script>
-        // Updated pages array, 'cases' is removed
-        const pages = ['home', 'about', 'offerings', 'careers', 'contact'];
-        
-        // Modal Functions
-        function showModal(title, message) {
-            document.getElementById('modal-title').textContent = title;
-            document.getElementById('modal-message').textContent = message;
-            document.getElementById('custom-modal').classList.remove('hidden');
-        }
+          <div className="hidden md:flex space-x-8">
+            {navLinks.map((link) => (
+              <button 
+                key={link.name} 
+                onClick={link.action} 
+                className={`text-sm font-medium transition-colors hover:text-blue-500 ${(scrolled || currentPage !== 'home') ? 'text-slate-600' : 'text-white/90'}`}
+              >
+                {link.name}
+              </button>
+            ))}
+          </div>
 
-        function hideModal() {
-            document.getElementById('custom-modal').classList.add('hidden');
-        }
+          <button 
+            onClick={() => { setCurrentPage('home'); setTimeout(() => document.getElementById('contact')?.scrollIntoView({behavior: 'smooth'}), 100); }}
+            className="hidden md:block bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-full text-sm font-semibold transition-all shadow-lg hover:shadow-blue-500/20"
+          >
+            Get Started
+          </button>
 
-        function showPage(pageId) {
-            // Hide all pages
-            document.querySelectorAll('.page-view').forEach(page => {
-                page.style.display = 'none';
-            });
+          <button className="md:hidden" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            {isMenuOpen ? <X className="text-slate-900" /> : <Menu className={(scrolled || currentPage !== 'home') ? 'text-slate-900' : 'text-white'} />}
+          </button>
+        </div>
+      </nav>
 
-            // Show the requested page
-            const targetPage = document.getElementById(`${pageId}-page`);
-            if (targetPage) {
-                targetPage.style.display = 'block';
-                window.scrollTo(0, 0); // Scroll to top on "page" switch
-            }
+      {/* Mobile Menu */}
+      {isMenuOpen && (
+        <div className="fixed inset-0 bg-white z-[60] p-10 flex flex-col items-center justify-center space-y-8">
+          <button className="absolute top-6 right-6" onClick={() => setIsMenuOpen(false)}>
+            <X className="w-8 h-8 text-slate-900" />
+          </button>
+          {navLinks.map((link) => (
+            <button key={link.name} onClick={() => { link.action(); setIsMenuOpen(false); }} className="text-2xl font-semibold text-slate-800">
+              {link.name}
+            </button>
+          ))}
+        </div>
+      )}
 
-            // Update active link styles
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.classList.remove('active-link', 'text-mm-primary');
-                btn.classList.add('text-mm-secondary');
-                if (btn.getAttribute('data-page') === pageId) {
-                    btn.classList.add('active-link', 'text-mm-primary');
-                }
-            });
-            
-            // Close mobile menu
-            document.getElementById('mobile-menu').classList.add('hidden');
-        }
+      {currentPage === 'home' ? (
+        <>
+          {/* Hero Carousel */}
+          <section id="home" className="relative h-screen overflow-hidden">
+            {slides.map((slide, index) => (
+              <div key={index} className={`absolute inset-0 transition-all duration-1000 ease-out ${index === activeSlide ? 'opacity-100 scale-100' : 'opacity-0 scale-105'}`}>
+                <div className="absolute inset-0 bg-slate-900/60 z-10" />
+                <img src={slide.image} alt={slide.title} className="w-full h-full object-cover" />
+                <div className="absolute inset-0 z-20 flex flex-col items-center justify-center text-center px-6">
+                  <div className="max-w-4xl">
+                    <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">{slide.title}</h1>
+                    <p className="text-xl md:text-2xl text-white/80 mb-10 max-w-2xl mx-auto font-light">{slide.subtitle}</p>
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                      <button 
+                        onClick={() => document.getElementById('services')?.scrollIntoView({behavior: 'smooth'})}
+                        className="bg-blue-600 hover:bg-blue-700 text-white px-8 py-4 rounded-full text-lg font-semibold transition-all flex items-center justify-center"
+                      >
+                        {slide.cta} <ArrowRight className="ml-2 w-5 h-5" />
+                      </button>
+                      <button 
+                        onClick={() => setCurrentPage('about')}
+                        className="bg-white/10 hover:bg-white/20 backdrop-blur-md text-white border border-white/30 px-8 py-4 rounded-full text-lg font-semibold transition-all"
+                      >
+                        Our Expertise
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+            <div className="absolute bottom-10 left-0 right-0 z-30 flex justify-center space-x-4">
+              {slides.map((_, i) => (
+                <button key={i} onClick={() => setActiveSlide(i)} className={`h-1.5 rounded-full transition-all ${i === activeSlide ? 'w-12 bg-blue-500' : 'w-4 bg-white/40'}`} />
+              ))}
+            </div>
+          </section>
 
-        /**
-         * Handles the contact form submission by capturing data and opening a mailto link.
-         * @param {HTMLFormElement} form The form element.
-         */
-        function handleContactSubmit(form) {
-            const name = form.querySelector('#contactName').value;
-            const email = form.querySelector('#contactEmail').value;
-            const message = form.querySelector('#contactMessage').value;
+          {/* Trust Bar */}
+          <div className="relative z-30 -mt-10 max-w-5xl mx-auto px-6">
+            <div className="bg-white rounded-2xl shadow-xl border border-slate-100 p-8 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+              <div><div className="text-3xl font-bold text-blue-600 mb-1">150+</div><div className="text-sm text-slate-500 uppercase font-semibold tracking-wider">Projects</div></div>
+              <div><div className="text-3xl font-bold text-blue-600 mb-1">15+</div><div className="text-sm text-slate-500 uppercase font-semibold tracking-wider">Industries</div></div>
+              <div><div className="text-3xl font-bold text-blue-600 mb-1">98%</div><div className="text-sm text-slate-500 uppercase font-semibold tracking-wider">CSAT Score</div></div>
+              <div><div className="text-3xl font-bold text-blue-600 mb-1">Global</div><div className="text-sm text-slate-500 uppercase font-semibold tracking-wider">Delivery</div></div>
+            </div>
+          </div>
 
-            const recipient = 'info@navmargconsulting.com';
-            const subject = encodeURIComponent(`New Consulting Inquiry from ${name}`);
-            
-            // Construct the email body
-            const body = encodeURIComponent(`
-Name: ${name}
-Email: ${email}
+          {/* Services Section */}
+          <section id="services" className="py-24 px-6 max-w-7xl mx-auto">
+            <div className="text-center mb-16">
+              <h2 className="text-blue-600 font-bold tracking-widest uppercase text-sm mb-4">Our Services</h2>
+              <h3 className="text-4xl md:text-5xl font-bold text-slate-900 mb-6">Innovative Consulting Solutions</h3>
+              <p className="text-lg text-slate-600 max-w-2xl mx-auto">We bridge the gap between complex technology and business results through strategy, operations, and talent.</p>
+            </div>
+            <div className="grid md:grid-cols-3 gap-8">
+              {services.map((service, idx) => (
+                <div key={idx} className="group bg-white rounded-3xl p-8 border border-slate-100 shadow-sm hover:shadow-2xl transition-all duration-300">
+                  <div className={`w-16 h-16 rounded-2xl ${service.color} flex items-center justify-center mb-8`}>{service.icon}</div>
+                  <h4 className="text-2xl font-bold text-slate-900 mb-4">{service.title}</h4>
+                  <p className="text-slate-600 mb-8 leading-relaxed">{service.description}</p>
+                  <ul className="space-y-4 mb-10">
+                    {service.items.map((item, i) => (
+                      <li key={i} className="flex items-start space-x-3 text-slate-700">
+                        <CheckCircle2 className="w-5 h-5 text-blue-500 shrink-0 mt-0.5" />
+                        <span className="text-sm font-medium">{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                  <button className="w-full flex items-center justify-between py-4 px-6 rounded-xl border border-slate-200 group-hover:bg-blue-600 group-hover:text-white transition-all font-semibold">
+                    Learn More <ChevronRight className="w-5 h-5" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </section>
+        </>
+      ) : (
+        /* About Us Page */
+        <div className="pt-32 pb-24 px-6 max-w-7xl mx-auto animate-in fade-in duration-500">
+          <section className="mb-24">
+            <h2 className="text-blue-600 font-bold uppercase tracking-widest text-sm mb-6">About Navmarg</h2>
+            <h3 className="text-4xl md:text-6xl font-bold text-slate-900 mb-12">The Navmarg Difference</h3>
+            <div className="grid md:grid-cols-2 gap-16 items-center">
+              <div className="space-y-6">
+                <p className="text-xl text-slate-600 leading-relaxed italic border-l-4 border-blue-600 pl-6">
+                  "We build the bridge between visionary strategy and flawless execution."
+                </p>
+                <p className="text-lg text-slate-600 leading-relaxed">
+                  Navmarg Consulting was founded on the principle that true value lies at the intersection of rigorous operational strategy and human-centric digital change. We specialize in taking complex, legacy processes and re-engineering them for the modern, AI-enabled enterprise.
+                </p>
+                <div className="pt-4">
+                  <button onClick={() => { setCurrentPage('home'); window.scrollTo(0,0); }} className="flex items-center text-blue-600 font-bold hover:translate-x-2 transition-transform">
+                    Back to Home <ArrowRight className="ml-2 w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+              <div className="rounded-3xl overflow-hidden shadow-2xl">
+                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?auto=format&fit=crop&q=80" alt="Team Collaboration" className="w-full h-auto" />
+              </div>
+            </div>
+          </section>
 
-Message:
-${message}
+          <section id="leaders">
+            <h3 className="text-3xl font-bold mb-12 text-center">Meet the Leaders</h3>
+            <div className="grid md:grid-cols-2 gap-12 max-w-5xl mx-auto">
+              {/* CEO Profile */}
+              <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300">
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-44 h-44 bg-slate-200 rounded-full mb-6 overflow-hidden border-4 border-white shadow-lg">
+                    <img 
+                      src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&q=80&w=400" 
+                      alt="Atharvan Anand" 
+                      className="w-full h-full object-cover" 
+                      onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=400'}}
+                    />
+                  </div>
+                  <h4 className="text-2xl font-bold">Atharvan Anand</h4>
+                  <p className="text-blue-600 font-semibold mb-4">Founder & Chief Executive Officer</p>
+                  <p className="text-slate-500 text-sm leading-relaxed mb-6">
+                    A visionary leader with over 15 years of experience in enterprise strategy. Atharvan leads Navmarg's mission to redefine how global enterprises leverage technology for sustainable growth, focusing on the human element of digital evolution.
+                  </p>
+                  <div className="flex space-x-4">
+                    <Linkedin className="w-5 h-5 text-slate-400 hover:text-blue-600 cursor-pointer transition-colors" />
+                    <Mail className="w-5 h-5 text-slate-400 hover:text-blue-600 cursor-pointer transition-colors" />
+                  </div>
+                </div>
+              </div>
 
----
-Sent via Navmarg Consulting website inquiry form.
-            `);
+              {/* Senior Partner Profile */}
+              <div className="bg-white p-8 rounded-3xl border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300">
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-44 h-44 bg-slate-200 rounded-full mb-6 overflow-hidden border-4 border-white shadow-lg">
+                    <img 
+                      src="https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?auto=format&fit=crop&q=80&w=600" 
+                      alt="Sandeep Kumar Mahato" 
+                      className="w-full h-full object-cover" 
+                      onError={(e) => { e.target.src = 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=600'}}
+                    />
+                  </div>
+                  <h4 className="text-2xl font-bold">Sandeep Kumar Mahato</h4>
+                  <p className="text-blue-600 font-semibold mb-4">Senior Partner - AI & Digital Transformation</p>
+                  <p className="text-slate-500 text-sm leading-relaxed mb-6">
+                    Sandeep is a specialist in digital ecosystems and agentic AI. He partners with global organizations to implement cutting-edge automation that drives operational agility, streamlining complex workflows into seamless digital experiences.
+                  </p>
+                  <div className="flex space-x-4">
+                    <Linkedin className="w-5 h-5 text-slate-400 hover:text-blue-600 cursor-pointer transition-colors" />
+                    <Mail className="w-5 h-5 text-slate-400 hover:text-blue-600 cursor-pointer transition-colors" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </section>
+        </div>
+      )}
 
-            const mailtoLink = `mailto:${recipient}?subject=${subject}&body=${body}`;
-            
-            // Open mailto link in new tab to prompt user's email client
-            window.open(mailtoLink, '_blank');
+      {/* Contact Section */}
+      <section id="contact" className="py-24 px-6 bg-blue-50">
+        <div className="max-w-5xl mx-auto bg-white rounded-[2.5rem] p-10 md:p-16 shadow-2xl flex flex-col md:flex-row gap-12 items-center">
+          <div className="md:w-1/2">
+            <h3 className="text-4xl font-bold mb-6">Ready to transform your business?</h3>
+            <p className="text-slate-600 text-lg mb-8">Let's discuss your specific challenges and how Navmarg can help you scale with efficiency.</p>
+            <div className="space-y-4">
+              <div className="flex items-center space-x-4">
+                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 font-bold"><Mail className="w-5 h-5"/></div>
+                <div>
+                  <p className="text-sm text-slate-500 font-semibold uppercase">Email Us</p>
+                  <p className="text-slate-900 font-medium">{companyEmail}</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="md:w-1/2 w-full relative min-h-[400px] flex items-center">
+            {formSubmitted ? (
+              <div className="w-full text-center p-8 bg-emerald-50 rounded-3xl border border-emerald-100 animate-in zoom-in duration-300">
+                <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                  <Send className="w-10 h-10 text-emerald-600" />
+                </div>
+                <h4 className="text-2xl font-bold text-slate-900 mb-2">Message Sent!</h4>
+                <p className="text-slate-600 leading-relaxed">
+                  We have received your message, will get back to you soon.
+                </p>
+                <button 
+                  onClick={() => setFormSubmitted(false)}
+                  className="mt-8 text-blue-600 font-semibold hover:underline"
+                >
+                  Send another message
+                </button>
+              </div>
+            ) : (
+              <form className="space-y-4 w-full" onSubmit={handleContactSubmit}>
+                <input name="name" type="text" required placeholder="Full Name" className="w-full p-4 rounded-xl border border-slate-200 outline-none focus:border-blue-500 transition-all" />
+                <input name="email" type="email" required placeholder="Email Address" className="w-full p-4 rounded-xl border border-slate-200 outline-none focus:border-blue-500 transition-all" />
+                <textarea name="message" required placeholder="Tell us about your project" rows="4" className="w-full p-4 rounded-xl border border-slate-200 outline-none focus:border-blue-500 transition-all resize-none"></textarea>
+                <button type="submit" className="w-full bg-slate-900 text-white py-4 rounded-xl font-bold hover:bg-slate-800 transition-all shadow-lg">
+                  Send Message
+                </button>
+              </form>
+            )}
+          </div>
+        </div>
+      </section>
 
-            // Show confirmation modal
-            showModal(
-                'Inquiry Submitted!', 
-                `Thank you for your inquiry, ${name}! Your email client should now be open with a pre-filled email draft addressed to ${recipient}. Please send the email to complete your submission.`
-            );
-            
-            // Clear form and go home
-            form.reset();
-            showPage('home');
-        }
+      {/* Footer */}
+      <footer className="bg-white border-t border-slate-100 pt-20 pb-10 px-6">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-20">
+          <div>
+            <Logo light={false} />
+            <p className="text-slate-500 mt-6 leading-relaxed">
+              Premium technology and business consulting firm specializing in AI transformations and operational excellence.
+            </p>
+          </div>
+          <div>
+            <h5 className="font-bold mb-6 uppercase text-xs tracking-widest text-slate-400">Services</h5>
+            <ul className="space-y-4 text-slate-600">
+              <li><button onClick={() => { setCurrentPage('home'); setTimeout(() => document.getElementById('services')?.scrollIntoView({behavior: 'smooth'}), 100); }} className="hover:text-blue-600 transition-colors">Digital Transformation</button></li>
+              <li><button onClick={() => { setCurrentPage('home'); setTimeout(() => document.getElementById('services')?.scrollIntoView({behavior: 'smooth'}), 100); }} className="hover:text-blue-600 transition-colors">AI Roadmap</button></li>
+              <li><button onClick={() => { setCurrentPage('home'); setTimeout(() => document.getElementById('services')?.scrollIntoView({behavior: 'smooth'}), 100); }} className="hover:text-blue-600 transition-colors">Staff Augmentation</button></li>
+            </ul>
+          </div>
+          <div>
+            <h5 className="font-bold mb-6 uppercase text-xs tracking-widest text-slate-400">Company</h5>
+            <ul className="space-y-4 text-slate-600">
+              <li><button onClick={() => { setCurrentPage('about'); window.scrollTo(0,0); }} className="hover:text-blue-600 transition-colors">About Us</button></li>
+              <li><button onClick={() => { setCurrentPage('home'); setTimeout(() => document.getElementById('contact')?.scrollIntoView({behavior: 'smooth'}), 100); }} className="hover:text-blue-600 transition-colors">Contact</button></li>
+              <li><button onClick={() => { setCurrentPage('home'); window.scrollTo(0,0); }} className="hover:text-blue-600 transition-colors">Privacy Policy</button></li>
+            </ul>
+          </div>
+          <div>
+            <h5 className="font-bold mb-6 uppercase text-xs tracking-widest text-slate-400">Newsletter</h5>
+            <p className="text-sm text-slate-500 mb-4">Stay updated with the latest AI trends.</p>
+            <div className="flex"><input type="text" placeholder="Your email" className="bg-slate-50 border border-slate-200 p-3 rounded-l-lg w-full outline-none focus:border-blue-500" /><button className="bg-blue-600 text-white px-4 rounded-r-lg hover:bg-blue-700 transition-colors">Go</button></div>
+          </div>
+        </div>
+        <div className="max-w-7xl mx-auto border-t border-slate-100 pt-10 text-center text-slate-400 text-sm">
+          <p>© {new Date().getFullYear()} Navmarg Consulting. All rights reserved.</p>
+        </div>
+      </footer>
+    </div>
+  );
+};
 
-        // Initialize navigation buttons
-        document.querySelectorAll('.nav-btn, .mobile-nav-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const pageId = e.currentTarget.getAttribute('data-page') || 'home';
-                showPage(pageId);
-            });
-        });
-
-        // Mobile Menu Toggle Script
-        document.getElementById('mobile-menu-button').addEventListener('click', () => {
-            document.getElementById('mobile-menu').classList.toggle('hidden');
-        });
-
-        // Initial load: show the home page
-        window.onload = () => {
-            showPage('home');
-        };
-    </script>
-
-</body>
-</html>
+export default App;
